@@ -31,7 +31,7 @@ export function useSiteData() { return useContext(SiteDataContext); }
 function SiteDataProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState(siteConfig);
   useEffect(() => {
-    fetch('api/config')
+    fetch('/landing-page/api/config')
       .then(r => r.json())
       .then(d => {
         if (d.stats) setData({

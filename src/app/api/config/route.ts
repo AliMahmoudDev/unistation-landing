@@ -9,7 +9,9 @@ const ADMIN_PASSWORD = "unistation2024";
 export async function GET() {
   try {
     const config = await getAllConfig();
-    return NextResponse.json(config);
+    return NextResponse.json(config, {
+      headers: { "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0" },
+    });
   } catch (error) {
     console.error("Failed to fetch config:", error);
     return NextResponse.json({ error: "Failed to fetch config" }, { status: 500 });
