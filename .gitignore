@@ -59,3 +59,5 @@ dev.out.log
 /.zscripts/
 /mini-services/
 bun.lock
+.env.local
+scripts/

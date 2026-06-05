@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, createContext, useContext } from "react";
 import {
   Card,
   CardContent,
@@ -21,6 +21,33 @@ import {
 } from "@/components/ui/table";
 import Image from "next/image";
 import siteConfig from "@/data/site-config.json";
+
+/* ═══════════════════════════════════════════════════
+   Live Data Context (fetches from Turso DB)
+   ═══════════════════════════════════════════════════ */
+const SiteDataContext = createContext(siteConfig);
+export function useSiteData() { return useContext(SiteDataContext); }
+
+function SiteDataProvider({ children }: { children: React.ReactNode }) {
+  const [data, setData] = useState(siteConfig);
+  useEffect(() => {
+    fetch('/api/config')
+      .then(r => r.json())
+      .then(d => {
+        if (d.stats) setData({
+          ...siteConfig,
+          stats: d.stats || siteConfig.stats,
+          universities: d.universities || siteConfig.universities,
+          basicPackage: d.basicPackage || siteConfig.basicPackage,
+          additionalPackage: d.additionalPackage || siteConfig.additionalPackage,
+          registration: d.registration || siteConfig.registration,
+          faqs: (d.faqs || siteConfig.faqs).map((f: any) => f.question ? { q: f.question, a: f.answer } : f),
+        });
+      })
+      .catch(() => {});
+  }, []);
+  return <SiteDataContext.Provider value={data}>{children}</SiteDataContext.Provider>;
+}
 
 /* ═══════════════════════════════════════════════════
    Scroll Animation Hook (lightweight IntersectionObserver)
@@ -271,9 +298,7 @@ const advantages = [
   { Icon: IconNature, title: "طبيعة خلابة", desc: "طبيعة ساحرة تجمع بين الجبال والبحيرات والغابات والسواحل، مما يمنح الطلاب تجربة معيشية استثنائية ومميزة." },
 ];
 
-/* universities now loaded from siteConfig */
-
-/* faqs now loaded from siteConfig */
+/* data loaded via useSiteData() from Turso DB */
 
 const services = [
   { Icon: IconTranslate, title: "ترجمة وتصديق الأوراق", desc: "ترجمة وتصديق جميع الأوراق المطلوبة للتقديم على الجامعات" },
@@ -556,6 +581,7 @@ function Navbar() {
    Hero
    ═══════════════════════════════════════════════════ */
 function HeroSection() {
+  const { stats } = useSiteData();
   /* ── EXPERIMENTAL: Hero Video Background ──
      Fix 1: Video shows immediately (not waiting for loaded event)
      Fix 2: Crossfade loop — two video elements alternate to hide the restart jump
@@ -690,7 +716,7 @@ function HeroSection() {
 
         {/* EXPERIMENTAL: Animated Counter Stats */}
         <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-5 max-w-4xl mx-auto hero-animate hero-delay-5">
-          {siteConfig.stats.map((s, i) => (
+          {stats.map((s, i) => (
             <div key={i} className="bg-white/8 backdrop-blur-md border border-white/12 rounded-2xl p-5 hover:bg-white/15 transition-all duration-300 hover:-translate-y-1 hover:border-brand-gold/20">
               <AnimatedCounter target={s.target} prefix={s.prefix} suffix={s.suffix} divisor={s.divisor} duration={2500} delay={i * 200} />
               <div className="text-white/50 text-sm mt-1">{s.label}</div>
@@ -760,6 +786,7 @@ function WhyGeorgiaSection() {
    Universities
    ═══════════════════════════════════════════════════ */
 function UniversitiesSection() {
+  const { universities } = useSiteData();
   return (
     <section id="universities" className="py-24 sm:py-32 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -780,7 +807,7 @@ function UniversitiesSection() {
         </FadeIn>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-          {siteConfig.universities.map((uni, i) => (
+          {universities.map((uni, i) => (
             <ScaleIn key={i} delay={i * 80}>
               <Card className={`group h-full hover:-translate-y-2 transition-all duration-300 border-0 rounded-2xl overflow-hidden hover:shadow-xl ${uni.highlight ? "ring-2 ring-brand-gold/40" : ""}`}>
                 <div className={`relative p-7 ${uni.highlight ? "bg-gradient-to-br from-brand-gold via-brand-gold to-brand-gold-dark" : "bg-gradient-to-br from-brand-purple to-brand-purple-light"}`}>
@@ -796,7 +823,7 @@ function UniversitiesSection() {
                   <h3 className={`font-bold text-lg leading-tight ${uni.highlight ? "text-brand-purple-dark" : "text-white"}`}>{uni.nameAr}</h3>
                 </div>
                 <CardContent className="p-7">
-                  <p className="text-gray-500 text-sm leading-relaxed mb-5">{uni.desc}</p>
+                  <p className="text-gray-500 text-sm leading-relaxed mb-5">{uni.description}</p>
                   <div className="flex flex-wrap gap-2 mb-5">
                     {uni.features.map((f, j) => <span key={j} className="text-xs bg-brand-purple/5 text-brand-purple px-3 py-1.5 rounded-full font-medium">{f}</span>)}
                   </div>
@@ -818,6 +845,7 @@ function UniversitiesSection() {
    Fees
    ═══════════════════════════════════════════════════ */
 function FeesSection() {
+  const { universities } = useSiteData();
   return (
     <section id="fees" className="py-24 sm:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -844,7 +872,7 @@ function FeesSection() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {siteConfig.universities.map((u, i) => (
+                {universities.map((u, i) => (
                   <TableRow key={i} className={`transition-colors hover:bg-brand-gold/5 ${i === 0 ? "bg-brand-gold/[0.04]" : ""}`}>
                     <TableCell className="py-5 px-6">
                       <div className="flex items-center gap-3">
@@ -877,6 +905,7 @@ function FeesSection() {
    Services
    ═══════════════════════════════════════════════════ */
 function ServicesSection() {
+  const { basicPackage, additionalPackage } = useSiteData();
   return (
     <section id="services" className="py-24 sm:py-32 bg-gradient-to-b from-gray-50/80 to-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -912,24 +941,24 @@ function ServicesSection() {
         <FadeIn delay={150}>
           <div className="max-w-lg mx-auto">
             <Card className="border-2 border-brand-gold/30 rounded-2xl shadow-2xl relative pt-4 card-shine-effect card-3d-tilt">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 bg-brand-gold text-brand-purple-dark text-xs font-bold px-4 py-1.5 rounded-full shadow-lg whitespace-nowrap pulse-glow">{siteConfig.basicPackage.badge}</div>
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 bg-brand-gold text-brand-purple-dark text-xs font-bold px-4 py-1.5 rounded-full shadow-lg whitespace-nowrap pulse-glow">{basicPackage.badge}</div>
               <div className="bg-gradient-to-br from-brand-purple to-brand-purple-light p-10 text-center relative overflow-hidden">
-                <h3 className="text-2xl font-bold text-white mb-2 relative">{siteConfig.basicPackage.title}</h3>
-                <p className="text-white/60 text-sm relative">{siteConfig.basicPackage.description}</p>
+                <h3 className="text-2xl font-bold text-white mb-2 relative">{basicPackage.title}</h3>
+                <p className="text-white/60 text-sm relative">{basicPackage.description}</p>
               </div>
               <CardContent className="p-10">
                 <div className="text-center mb-8">
                   <div className="flex items-baseline justify-center gap-2">
-                    <span className="text-sm text-gray-400">{siteConfig.basicPackage.currency}</span>
-                    <span className="text-5xl font-bold text-brand-purple">{siteConfig.basicPackage.totalPrice}</span>
+                    <span className="text-sm text-gray-400">{basicPackage.currency}</span>
+                    <span className="text-5xl font-bold text-brand-purple">{basicPackage.totalPrice}</span>
                   </div>
-                  <p className="text-gray-400 text-sm mt-1">{siteConfig.basicPackage.priceNote}</p>
+                  <p className="text-gray-400 text-sm mt-1">{basicPackage.priceNote}</p>
                 </div>
                 <div className="space-y-4 mb-8">
-                  {siteConfig.basicPackage.installments.map((inst, idx) => (
+                  {basicPackage.installments.map((inst: any, idx: number) => (
                     <div key={idx} className="flex items-center gap-4 p-4 bg-brand-gold/5 rounded-xl border border-brand-gold/10">
                       <div className="w-8 h-8 rounded-full bg-brand-gold/20 flex items-center justify-center shrink-0"><span className="text-brand-gold font-bold text-xs">{idx + 1}</span></div>
-                      <div><span className="font-bold text-brand-purple text-sm">{inst.label}:</span><span className="text-gray-600 text-sm mr-2">{inst.amount} {siteConfig.basicPackage.currency} {inst.note}</span></div>
+                      <div><span className="font-bold text-brand-purple text-sm">{inst.label}:</span><span className="text-gray-600 text-sm mr-2">{inst.amount} {basicPackage.currency} {inst.note}</span></div>
                     </div>
                   ))}
                 </div>
@@ -950,15 +979,15 @@ function ServicesSection() {
               خدمة إضافية
             </span>
             <h3 className="text-2xl sm:text-3xl font-bold text-brand-purple mt-5 mb-4 leading-tight">
-              {siteConfig.additionalPackage.title}
+              {additionalPackage.title}
             </h3>
             <p className="text-gray-500 text-base max-w-3xl mx-auto leading-relaxed">
-              {siteConfig.additionalPackage.description}
+              {additionalPackage.description}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-            {siteConfig.additionalPackage.services.map((s, i) => (
+            {additionalPackage.services.map((s: any, i: number) => (
               <FadeIn key={i} delay={i * 60}>
                 <div className="bg-gradient-to-br from-brand-purple to-brand-purple-dark rounded-2xl p-6 text-center h-full hover:-translate-y-1 transition-transform duration-300">
                   <div className="w-10 h-10 rounded-full bg-brand-gold/20 flex items-center justify-center mx-auto mb-3">
@@ -972,7 +1001,7 @@ function ServicesSection() {
 
           <div className="mt-8 max-w-3xl mx-auto">
             <div className="bg-brand-purple/5 border border-brand-purple/10 rounded-xl p-5 text-center">
-              <p className="text-brand-purple/70 text-sm leading-relaxed">{siteConfig.additionalPackage.note}</p>
+              <p className="text-brand-purple/70 text-sm leading-relaxed">{additionalPackage.note}</p>
             </div>
           </div>
         </FadeIn>
@@ -987,6 +1016,7 @@ function ServicesSection() {
 const docIcons = [IconPassport, IconPhoto, IconGrades];
 
 function RegistrationSection() {
+  const { registration } = useSiteData();
   return (
     <section id="registration" className="py-24 sm:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -995,7 +1025,7 @@ function RegistrationSection() {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-purple mb-5 leading-tight">
             خطوات <span className="text-gold-gradient">التسجيل</span>
           </h2>
-          <p className="text-gray-500 text-lg max-w-3xl mx-auto">{siteConfig.registration.description}</p>
+          <p className="text-gray-500 text-lg max-w-3xl mx-auto">{registration.description}</p>
           <div className="gold-line mx-auto mt-6" />
         </FadeIn>
 
@@ -1004,7 +1034,7 @@ function RegistrationSection() {
           <div className="max-w-3xl mx-auto">
             <h3 className="text-xl font-bold text-brand-purple text-center mb-8">الأوراق المطلوبة</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-              {siteConfig.registration.docs.map((doc, i) => {
+              {registration.docs.map((doc: any, i: number) => {
                 const DocIcon = docIcons[i] || IconFileCheck;
                 return (
                   <Card key={i} className="border-0 bg-gray-50 rounded-2xl hover:shadow-md transition-shadow duration-300">
@@ -1030,6 +1060,7 @@ function RegistrationSection() {
    FAQ
    ═══════════════════════════════════════════════════ */
 function FAQSection() {
+  const { faqs } = useSiteData();
   return (
     <section id="faq" className="py-24 sm:py-32 bg-gradient-to-b from-gray-50/80 to-white">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1044,7 +1075,7 @@ function FAQSection() {
 
         <FadeIn delay={100}>
           <Accordion type="single" collapsible className="space-y-3">
-            {siteConfig.faqs.map((faq, i) => (
+            {faqs.map((faq: any, i: number) => (
               <AccordionItem key={i} value={`faq-${i}`} className="border-0 bg-white rounded-2xl shadow-sm px-6 overflow-hidden hover:shadow-md transition-shadow duration-300">
                 <AccordionTrigger className="text-brand-purple font-bold text-right py-5 hover:no-underline text-[15px]">
                   {faq.q}
@@ -1208,6 +1239,7 @@ function FloatingWhatsApp() {
    ═══════════════════════════════════════════════════ */
 export default function LandingPage() {
   return (
+    <SiteDataProvider>
     <main className="min-h-screen flex flex-col bg-white">
       <ScrollProgressBar />
       <Navbar />
@@ -1223,5 +1255,6 @@ export default function LandingPage() {
       <Footer />
       <FloatingWhatsApp />
     </main>
+    </SiteDataProvider>
   );
 }
