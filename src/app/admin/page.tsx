@@ -548,7 +548,7 @@ export default function AdminPage() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/config");
+      const res = await fetch("api/config");
       const json = await res.json();
       setData(json);
     } catch { setError("فشل تحميل البيانات"); }
@@ -578,7 +578,7 @@ export default function AdminPage() {
   const handleLogin = async () => {
     if (!password) return;
     try {
-      const res = await fetch("/api/config", {
+      const res = await fetch("api/config", {
         method: "PUT",
         headers: { "Content-Type": "application/json", "x-admin-password": password },
         body: JSON.stringify({ key: "_ping", value: true }),
@@ -600,7 +600,7 @@ export default function AdminPage() {
   const saveKey = async (key: string, value: any) => {
     setSaving(true); setSavedKey(null); setError("");
     try {
-      const res = await fetch("/api/config", {
+      const res = await fetch("api/config", {
         method: "PUT",
         headers: { "Content-Type": "application/json", "x-admin-password": password },
         body: JSON.stringify({ key, value }),
