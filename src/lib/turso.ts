@@ -2,7 +2,7 @@ import { createClient } from "@libsql/client";
 
 const client = createClient({
   url: "libsql://unistation-alimahmouddev.aws-eu-west-1.turso.io",
-  authToken: "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3ODA2Njc4ODYsImlkIjoiMDE5ZTk4MTAtNTIwMS03YzY3LWE2OGItNzc0MmNhNGRjMWE0IiwicmlkIjoiOTk4MDI5ODAtYzM4OS00MmJlLTk0YTAtOTI4OGExYTA1ODRhIn0.BTO_JLTn-fFwx5JlKV4bVtEPSo17YMnEIrUkWH-tT6Biotn9IfBh9Rh3v9PWiXB7OhuZxERhf27G4T5TWEgGBA",
+  authToken: "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3ODA2NzU4MzcsImlkIjoiMDE5ZTk4OGMtNmYwMS03MzRiLWJmMDktM2MxMjRjNTRmYTdjIiwicmlkIjoiZjhkYmY5YzMtYjgxZC00NGE0LTk0OGItZWUyZGU3MTMxMmU5In0.x1wmww36mqOP2Kr4ZAdYHI8PJs2ZRI862OCmkQ6P3t4bkhuskarzx1-i4Hm-nIgCRx-m6pS34_tNzo_NQwOOAA",
 });
 
 export default client;
