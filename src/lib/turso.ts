@@ -1,8 +1,8 @@
 import { createClient } from "@libsql/client";
 
 const client = createClient({
-  url: process.env.TURSO_DATABASE_URL!,
-  authToken: process.env.TURSO_AUTH_TOKEN,
+  url: "libsql://unistation-alimahmouddev.aws-eu-west-1.turso.io",
+  authToken: "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3ODA2Njc4ODYsImlkIjoiMDE5ZTk4MTAtNTIwMS03YzY3LWE2OGItNzc0MmNhNGRjMWE0IiwicmlkIjoiOTk4MDI5ODAtYzM4OS00MmJlLTk0YTAtOTI4OGExYTA1ODRhIn0.BTO_JLTn-fFwx5JlKV4bVtEPSo17YMnEIrUkWH-tT6Biotn9IfBh9Rh3v9PWiXB7OhuZxERhf27G4T5TWEgGBA",
 });
 
 export default client;
