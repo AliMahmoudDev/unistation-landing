@@ -708,7 +708,7 @@ export default function AdminPage() {
               style={{ padding: "7px 14px", background: "rgba(255,255,255,0.1)", color: "#fca5a5", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, fontWeight: 600, cursor: "pointer", fontSize: 12, fontFamily: "Cairo, sans-serif" }}>
               🚪 {!isMobile && "خروج"}
             </button>
-            <a href="/"
+            <a href="/landing-page"
               style={{ padding: "7px 14px", background: "#f0b414", color: "#28143c", border: "none", borderRadius: 8, fontWeight: 700, cursor: "pointer", fontSize: 12, textDecoration: "none", fontFamily: "Cairo, sans-serif" }}>
               👁️ {!isMobile && "عرض الموقع"}
             </a>
