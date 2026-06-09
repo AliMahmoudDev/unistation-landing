@@ -31,7 +31,7 @@ export function useSiteData() { return useContext(SiteDataContext); }
 function SiteDataProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState(siteConfig);
   useEffect(() => {
-    fetch('/landing-page/api/config')
+    fetch('/georgia/api/config')
       .then(r => r.json())
       .then(d => {
         if (d.stats) setData({
@@ -643,7 +643,7 @@ function HeroSection() {
           }`}
           style={{ filter: "brightness(0.7)" }}
         >
-          <source src="/landing-page/hero-video.mp4" type="video/mp4" />
+          <source src="/georgia/hero-video.mp4" type="video/mp4" />
         </video>
         {/* Video B (same src, starts when A ends) */}
         <video
@@ -655,7 +655,7 @@ function HeroSection() {
           }`}
           style={{ filter: "brightness(0.7)" }}
         >
-          <source src="/landing-page/hero-video.mp4" type="video/mp4" />
+          <source src="/georgia/hero-video.mp4" type="video/mp4" />
         </video>
         {/* Image fallback — only shows if both videos fail */}
         <Image
@@ -1146,7 +1146,7 @@ function ContactSection() {
 function CTASection() {
   return (
     <section className="py-24 sm:py-32 bg-gradient-to-br from-brand-purple-dark via-brand-purple to-brand-purple-light relative overflow-hidden animate-gradient-bg">
-      <div className="absolute inset-0 bg-[url('/landing-page/georgia-nature.png')] bg-cover bg-center opacity-10" />
+      <div className="absolute inset-0 bg-[url('/georgia/georgia-nature.png')] bg-cover bg-center opacity-10" />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
         <FadeIn>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">

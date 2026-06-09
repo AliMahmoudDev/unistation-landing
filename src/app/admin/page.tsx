@@ -548,7 +548,7 @@ export default function AdminPage() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/landing-page/api/config");
+      const res = await fetch("/georgia/api/config");
       const json = await res.json();
       setData(json);
     } catch { setError("فشل تحميل البيانات"); }
@@ -578,7 +578,7 @@ export default function AdminPage() {
   const handleLogin = async () => {
     if (!password) return;
     try {
-      const res = await fetch("/landing-page/api/config", {
+      const res = await fetch("/georgia/api/config", {
         method: "PUT",
         headers: { "Content-Type": "application/json", "x-admin-password": password },
         body: JSON.stringify({ key: "_ping", value: true }),
@@ -600,7 +600,7 @@ export default function AdminPage() {
   const saveKey = async (key: string, value: any) => {
     setSaving(true); setSavedKey(null); setError("");
     try {
-      const res = await fetch("/landing-page/api/config", {
+      const res = await fetch("/georgia/api/config", {
         method: "PUT",
         headers: { "Content-Type": "application/json", "x-admin-password": password },
         body: JSON.stringify({ key, value }),
@@ -708,7 +708,7 @@ export default function AdminPage() {
               style={{ padding: "7px 14px", background: "rgba(255,255,255,0.1)", color: "#fca5a5", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, fontWeight: 600, cursor: "pointer", fontSize: 12, fontFamily: "Cairo, sans-serif" }}>
               🚪 {!isMobile && "خروج"}
             </button>
-            <a href="/landing-page"
+            <a href="/georgia"
               style={{ padding: "7px 14px", background: "#f0b414", color: "#28143c", border: "none", borderRadius: 8, fontWeight: 700, cursor: "pointer", fontSize: 12, textDecoration: "none", fontFamily: "Cairo, sans-serif" }}>
               👁️ {!isMobile && "عرض الموقع"}
             </a>
