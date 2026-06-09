@@ -418,7 +418,7 @@ function Navbar() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <a href={BASE_URL} className="flex items-center gap-3">
-            <Image src="/logos/Logo 01.png" alt="UniStation" width={44} height={44} className="rounded-xl" />
+            <Image src="/logos/logo-01.png" alt="UniStation" width={44} height={44} className="rounded-xl" />
             <span className={`font-bold text-xl tracking-wide transition-colors ${scrolled ? "text-brand-purple" : "text-white"}`}>
               UniStation
             </span>
@@ -1178,7 +1178,7 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-12">
           <div className="flex items-center gap-3">
-            <Image src="/logos/Logo 01.png" alt="UniStation" width={48} height={48} className="rounded-xl" />
+            <Image src="/logos/logo-01.png" alt="UniStation" width={48} height={48} className="rounded-xl" />
             <div>
               <span className="font-bold text-xl text-white block">UniStation</span>
               <span className="text-white/40 text-xs">YOUR GATEWAY TO STUDY ABROAD</span>

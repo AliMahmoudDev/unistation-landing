@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     "دراسة الطب بالإنجليزية",
   ],
   icons: {
-    icon: "/logos/Logo 01.png",
+    icon: "/logos/logo-01.png",
   },
 };
 
